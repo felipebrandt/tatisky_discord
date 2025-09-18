@@ -1,7 +1,7 @@
 from datetime import datetime
 from peewee import *
-from db_connection import db
-from utils import random_code
+from app.db_connection import db
+from app.utils import random_code
 
 
 class BaseModel(Model):
@@ -10,6 +10,12 @@ class BaseModel(Model):
 
     class Meta:
         database = db
+
+
+class PendingMessage(BaseModel):
+    pending_message_id = AutoField(primary_key=True)
+    content = TextField(null=True)
+    image_url = TextField(null=True)
 
 
 class PrivacyUser(BaseModel):
@@ -84,6 +90,6 @@ class CodePrivacy(BaseModel):
 
 
 if __name__ == '__main__':
-    db.create_tables([PrivacyUser, DiscordUser, TelegramUser, CodePrivacy])
+    db.create_tables([PendingMessage])
 
 
