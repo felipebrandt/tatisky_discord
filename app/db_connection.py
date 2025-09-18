@@ -4,7 +4,7 @@ from os import getenv
 
 db = MySQLDatabase(database=getenv('DATABASE', ''),
                             host=getenv('HOST', ''),
-                            port=int(getenv('PORTS', '')),
+                            port=int(getenv('PORTS', 13046)),
                             user=getenv('USER', ''),
                             password=getenv('PASSWORD', ''),
                    ssl={'ca': 'ca.pem'})
