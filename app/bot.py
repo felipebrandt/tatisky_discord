@@ -1,6 +1,7 @@
+# from app.chat_bot import groq_chat_bot_response
 import discord
 from discord.ext import commands, tasks
-from models import *
+from app.models import *
 from datetime import datetime, timedelta
 from os import getenv
 import asyncio
@@ -22,11 +23,35 @@ intents.presences = False
 bot = commands.Bot(command_prefix=PREFIX, intents=intents)
 
 
-
 @bot.event
 async def on_ready():
     check_expirations.start()
 
+
+@bot.event
+async def on_message(message):
+    if message.author.bot:
+        return
+
+    if message.content.startswith("/"):
+        await bot.process_commands(message)  # ainda deixa o comando funcionar
+        return
+
+    # if message.channel.id in [1416465529358778468]:
+    #     to_response = await groq_chat_bot_response(message.content)
+    #     await message.channel.send(f'{message.author.mention}' + to_response)
+
+    if not DiscordUser.has_user(message.author.id):
+        create_discord_user(message.author)
+
+
+    if message.author.id in [1286014015847403671] and message.channel.id in [1415059789599211520]:
+        img_url = None
+        if message.attachments:
+            img_url = message.attachments[0].url
+
+        PendingMessage.create(content=message.content or None, image_url=img_url, created_at=datetime.now())
+        print(f"Mensagem salva: {message.content} {img_url}")
 
 
 @bot.command()
@@ -111,7 +136,7 @@ def get_discord_user(author, privacy_user):
     return create_discord_user(author, privacy_user)
 
 
-def create_discord_user(author, privacy_user):
+def create_discord_user(author, privacy_user=None):
     discord_user = DiscordUser()
     discord_user.created_at = datetime.now()
     discord_user.discord_name = author.name
@@ -149,4 +174,5 @@ def create_code(privacy_user, expires_days):
     return code_privacy
 
 
-bot.run(TOKEN)
+if __name__ == '__main__':
+    bot.run(TOKEN)
