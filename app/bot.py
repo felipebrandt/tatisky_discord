@@ -60,15 +60,17 @@ async def validar(ctx):
         privacy_user = PrivacyUser.has_user(raw_privacy_user)
         code_privacy = CodePrivacy.has_code(code, privacy_user)
         if privacy_user and code_privacy:
+            ctx.message.delete()
             discord_user = get_discord_user(ctx.author, privacy_user)
             await ctx.author.add_roles(discord.utils.get(ctx.guild.roles, name="VIP Discord"))
             code_privacy.delete_instance()
         else:
             await ctx.send(f"{ctx.author.mention} Código ou Assinante Inválido!")
-        ctx.message.delete()
+
 
 
 @bot.command()
+@commands.has_permissions(manage_roles=True)
 async def generate(ctx):
     if ctx.message:
         raw_privacy_user, expires_days = ctx.message.content.split(' ')[1].split('-')
