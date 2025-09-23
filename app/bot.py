@@ -44,7 +44,6 @@ async def on_message(message):
     if not DiscordUser.has_user(message.author.id):
         create_discord_user(message.author)
 
-
     if message.author.id in [1286014015847403671] and message.channel.id in [1415059789599211520]:
         img_url = None
         if message.attachments:
@@ -64,9 +63,9 @@ async def validar(ctx):
             discord_user = get_discord_user(ctx.author, privacy_user)
             await ctx.author.add_roles(discord.utils.get(ctx.guild.roles, name="VIP Discord"))
             code_privacy.delete_instance()
-            await ctx.send(f"user: {discord_user.discord_id} \n code: {code}")
         else:
             await ctx.send(f"{ctx.author.mention} Código ou Assinante Inválido!")
+        ctx.message.delete()
 
 
 @bot.command()
