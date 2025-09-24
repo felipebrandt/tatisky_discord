@@ -60,13 +60,13 @@ async def validar(ctx):
         privacy_user = PrivacyUser.has_user(raw_privacy_user)
         code_privacy = CodePrivacy.has_code(code, privacy_user)
         if privacy_user and code_privacy:
-            ctx.message.delete()
             discord_user = get_discord_user(ctx.author, privacy_user)
             await ctx.author.add_roles(discord.utils.get(ctx.guild.roles, name="VIP Discord"))
             code_privacy.delete_instance()
+            await ctx.send(f"{ctx.author.mention} Você foi validado com sucesso! Seja Bem-Vindo ao nosso cantinho")
         else:
             await ctx.send(f"{ctx.author.mention} Código ou Assinante Inválido!")
-
+        await ctx.message.delete()
 
 
 @bot.command()
@@ -80,7 +80,6 @@ async def generate(ctx):
                         {privacy_user.create_privacy_welcome_message(code_privacy.code_id)}''')
 
 
-
 @bot.command()
 @commands.has_permissions(manage_roles=True)  # só quem tem permissão pode usar
 async def cargo(ctx, member: discord.Member, role: discord.Role):
@@ -92,7 +91,6 @@ async def cargo(ctx, member: discord.Member, role: discord.Role):
         await ctx.send("🚫 Não tenho permissão para gerenciar esse cargo.")
     except Exception as e:
         await ctx.send(f"⚠️ Erro: {e}")
-
 
 
 @bot.command()
