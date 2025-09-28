@@ -129,9 +129,8 @@ async def check_expirations():
 
 
 def get_discord_user(author, privacy_user):
-    has_discord = DiscordUser.has_user(author.id)
-    if has_discord:
-        discord_user = has_discord.get()
+    discord_user = DiscordUser.has_user(author.id)
+    if discord_user:
         discord_user.privacy_user = privacy_user
         discord_user.save()
         return discord_user
