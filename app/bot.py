@@ -73,11 +73,12 @@ async def validar(ctx):
 @commands.has_permissions(manage_roles=True)
 async def generate(ctx):
     if ctx.message:
-        raw_privacy_user, expires_days = ctx.message.content.split(' ')[1].split('-')
-        privacy_user = get_privacy_user(raw_privacy_user, expires_days)
-        code_privacy = create_code(privacy_user, expires_days)
-        await ctx.send(f'''{ctx.author.mention} Código Criado com Sucesso!\n\n\n
-                        {privacy_user.create_privacy_welcome_message(code_privacy.code_id)}''')
+        if ctx.message.channel.id in [1416465529358778468]:
+            raw_privacy_user, expires_days = ctx.message.content.split(' ')[1].split('-')
+            privacy_user = get_privacy_user(raw_privacy_user, expires_days)
+            code_privacy = create_code(privacy_user, expires_days)
+            await ctx.send(f'''{ctx.author.mention} Código Criado com Sucesso!\n\n\n
+                            {privacy_user.create_privacy_welcome_message(code_privacy.code_id)}''')
 
 
 @bot.command()
